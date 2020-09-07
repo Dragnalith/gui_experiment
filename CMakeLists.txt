@@ -13,42 +13,6 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5 COMPONENTS Gui Widgets Qml Quick REQUIRED)
 
-function(copy_qt5_runtime_files target prefix)
-    add_custom_command(
-        TARGET ${target} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target}>/${prefix}/
-    )
-    foreach(arg IN LISTS ARGN)
-        add_custom_command(
-            TARGET ${target} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${Qt5_DIR}/../../../${arg}$<$<CONFIG:Debug>:d>.dll"
-            $<TARGET_FILE_DIR:${target}>/${prefix}/
-        )
-        add_custom_command(
-            TARGET ${target} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${Qt5_DIR}/../../../${arg}$<$<CONFIG:Debug>:d>.pdb"
-            $<TARGET_FILE_DIR:${target}>/${prefix}/
-        )
-    endforeach()
-endfunction()
-
-function(copy_qt5_qml_folders target prefix)
-    add_custom_command(
-        TARGET ${target} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target}>/${prefix}/
-    )
-    foreach(arg IN LISTS ARGN)
-        add_custom_command(
-            TARGET ${target} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${Qt5_DIR}/../../../qml/${arg}/"
-            $<TARGET_FILE_DIR:${target}>/${prefix}/${arg}
-        )
-    endforeach()
-endfunction()
-
 function(deploy_qt5_runtime_dependency target)
     add_custom_command(
         TARGET ${target} POST_BUILD

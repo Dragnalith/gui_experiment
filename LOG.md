@@ -2,3 +2,4 @@
 - I did not find any quick system independent may to make Qt being found by CMake
 - I have added a cmake function to copy Qt dll next to build executable
 - It is possible to setup debug in Qt sources by adding Qt source folder to debug file source property of the solution
+- By using the windeployqt.exe as post build step you can automatically copy necessary dependency next to the built executable
