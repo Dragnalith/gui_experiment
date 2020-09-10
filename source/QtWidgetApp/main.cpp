@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QVBoxLayout>
 
 class MyRectangle : public QWidget {
 public:  
@@ -10,10 +11,14 @@ public:
         : QWidget(parent)
         , m_color(color)
     {
-        //setGeometry(0, 0, 200, 150);
+        resize(sizeHint());
     }
 
     virtual QSize sizeHint() const override {
+        return QSize(200, 150);
+    }
+
+    virtual QSize minimumSizeHint() const override {
         return QSize(200, 150);
     }
 
@@ -23,7 +28,8 @@ public:
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setPen(QPen(m_color, 4));
         auto g = geometry();
-        painter.drawRect(g);
+        QRect r(QPoint(), size());
+        painter.drawRect(r);
     }
 private:
     QColor m_color;
@@ -61,30 +67,43 @@ public:
     }
 };
 
+//#define WITH_LAYOUT
+
 int main(int argc, char** argv) {
     QApplication app(argc, argv);
 
 
     MyWidget window;
     window.setWindowTitle("Window");
-    MyPushButton* button = new MyPushButton(&window);
-    auto gb = button->geometry();
-    auto gw = gb.width();
-    gb.setX(gb.x() + 100);
-    gb.setWidth(gw);
-    button->setGeometry(gb);
-    button->setText("Press Me!");
-    MyRectangle* rect = new MyRectangle(Qt::GlobalColor::green, &window);
+
+#ifdef WITH_LAYOUT
+    QVBoxLayout* layout = new QVBoxLayout(&window);
+    QWidget* parent = nullptr;
+#else
+    QWidget* parent = &window;
+#endif
+
+    MyRectangle* rect = new MyRectangle(Qt::GlobalColor::green, parent);
     auto size = rect->size();
     auto g = rect->geometry();
-    auto w = g.width();
-    auto h = g.height();
-    g.setX(g.x() + 50);
-    g.setY(g.y() + 20);
-    g.setWidth(w);
-    g.setHeight(h);
-    rect->setGeometry(g);
+    auto w = size.width();
+    auto h = size.height();
+    rect->resize(350, 220);
+    rect->move(700, 700);
+
+    auto size2 = rect->size();
     auto g2 = rect->geometry();
+
+    MyPushButton* button = new MyPushButton(parent);
+    button->setText("Press Me!");
+    auto gb = button->geometry();
+    auto gw = gb.width();
+    //button->move(100, 0);
+
+#ifdef WITH_LAYOUT
+    layout->addWidget(button);
+    layout->addWidget(rect);
+#endif
 
     auto windowSize0 = window.size();
     window.show();

@@ -25,3 +25,7 @@
 - The cropping area issue is not computing during the set parent, because even if set parent is done after child change of geometry I got the same issue.
 - The cropping area actually is correctly updated according to geometry only regarding its size. But the cropping area does not take children position into account.
 - QWidget has a default size 640,480. This size is modified using the sizeHint when calling QWidget::show();
+https://myprogrammingnotes.com/size-qt-widgets-determined.html
+- I have discover QWidget::resize and QWidget::move to set size and position instead of QWidget::setGeometry. But it looks to do the same.
+- I have tried to use QVBoxLayout. MyRectangle get completely stretched and the fact it is position has been manually modified create issue. In addition their are default margin, which is cumbersome.
+- I found my I had cropping bug, it is because the painter coordinate system is relative the current widget and not its parent. So the correct rectangle to render it is not QWidget::geometry() because in that case the rectangle is relative to the parent.
