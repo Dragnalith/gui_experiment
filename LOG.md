@@ -11,5 +11,17 @@
 - Because QWidget inherit from QPaintDevice, it is possible to create a QPainter using a QWidget
 - Qt Widget style system seems to have baked a fixed number of ui element (menu, button, etc). So you can draw you custom widget using the baked ui element as primitive.
 - [ ] Create custom widget with rectangle and position them  with custom layout
-? Why MyRectangle is cropped to a region smaller than its parent window size
+? Why MyRectangle is cropped to a region smaller than its parent window size? How works cropping?
+? Does geometry() relative to parent position?
 - [ ] Animate widget rendering
+? What is a slot?
+  A method which can be connected to a signal
+
+# 2020/09/10
+? Is it possible to reuse Qt Quick scene graph?
+? What is Qt Style Sheet
+- Children region is computed on demand looping on all the children widget
+- Children is not used for cropping the rendering of children. I have experience cropping where cropping area with the children region when the child is attached to the parent, even if afterward I am changing the geometry of the child. But of course if I change the children geometry, parent->childrenRegion will return a correct value.
+- The cropping area issue is not computing during the set parent, because even if set parent is done after child change of geometry I got the same issue.
+- The cropping area actually is correctly updated according to geometry only regarding its size. But the cropping area does not take children position into account.
+- QWidget has a default size 640,480. This size is modified using the sizeHint when calling QWidget::show();
